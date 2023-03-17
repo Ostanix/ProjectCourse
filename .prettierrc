@@ -7,6 +7,6 @@
   "jsxSingleQuote": true,
   "bracketSpacing": true,
   "arrowParens": "always",
-  "max-len": ["error", 140, 2],
+  "max-len": ["error", 110, 2],
   "useTabs": false
 }

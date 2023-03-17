@@ -1,90 +1,91 @@
 import React, { useState } from 'react';
 import api from '../api';
+import SearchStatus from './searchStatus';
 
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll());
 
-  const formatHeaderColor = () => {
-    let classesColor = 'badge ';
-    classesColor += users.length === 0 ? 'bg-danger' : 'bg-primary';
-    return classesColor;
-  };
-
-  const wordEndings = () => {
-    let wordEnd = 2 <= users.length && users.length <= 4 ? 'а' : '';
-    return wordEnd;
-  };
-
-  const formatHeaderText = () => {
-    let classesText =
-      users.length > 0
-        ? `${users.length} человек${wordEndings()} тусанут с тобой сегодня`
-        : 'Никто с тобой не тусанет';
-    return classesText;
-  };
-
   const handleDelete = (userId) => {
-    setUsers((prevState) => prevState.filter((user) => user._id !== userId));
+    setUsers(users.filter((user) => user._id !== userId));
   };
 
-  const qualityClassColor = (classColor) => {
-    let classes = `badge bg-${classColor}`;
-    return classes;
+  const renderPhrase = (number) => {
+    const lastOne = Number(number.toString().slice(-1));
+    if (number > 4 && number < 15) return 'человек тусанет';
+    if ([2, 3, 4].indexOf(lastOne) >= 0) return 'человека тусанут';
+    if (lastOne === 1) return 'человек тусанет';
+    return 'человек тусанет';
   };
 
-  const renderTabString = () => {
-    return users.map((user) => (
-      <tr key={user._id}>
-        <td>{user.name}</td>
-        <td>
-          {user.qualities.map((qualitie) => (
-            <span
-              key={user._id}
-              className={qualityClassColor(qualitie.color)}
-              style={{ margin: '3px' }}
-            >
-              {qualitie.name}
-            </span>
-          ))}
-        </td>
-        <td>{user.profession.name}</td>
-        <td>{user.completedMeetings}</td>
-        <td>{user.rate}</td>
-        <td>
-          <button key={user._id} className='badge bg-danger' onClick={() => handleDelete(user._id)}>
-            delete
-          </button>
-        </td>
-      </tr>
-    ));
+  const Bookmark = (userId) => {
+    setUsers(
+      users.map((user) => {
+        if (user._id === userId) {
+          if (user.bookmark) {
+            user.bookmark = false;
+          } else {
+            user.bookmark = true;
+          }
+        }
+        return user;
+      }),
+    );
   };
 
-  const renderTab = () => {
-    if (users.length !== 0) {
-      return (
-        <table className='table table-striped'>
+  return (
+    <>
+      {users.map((user) => (
+        <SearchStatus
+          key={user._id}
+          onRenderPhrase={renderPhrase}
+          length={users.length}
+          {...user}
+        />
+      ))}
+
+      {users.length > 0 && (
+        <table className='table'>
           <thead>
             <tr>
               <th scope='col'>Имя</th>
               <th scope='col'>Качества</th>
               <th scope='col'>Профессия</th>
-              <th scope='col'>Встретился</th>
+              <th scope='col'>Встретился, раз</th>
               <th scope='col'>Оценка</th>
-              <th scope='col'></th>
+              <th scope='col'>Избранное</th>
+              <th />
             </tr>
           </thead>
-          <tbody>{renderTabString()}</tbody>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>
+                  {user.qualities.map((item) => (
+                    <span className={'badge m-1 bg-' + item.color} key={item._id}>
+                      {item.name}
+                    </span>
+                  ))}
+                </td>
+                <td>{user.profession.name}</td>
+                <td>{user.completedMeetings}</td>
+                <td>{user.rate}</td>
+                <td>
+                  <button
+                    onClick={() => Bookmark(user._id)}
+                    className={'bi bi-bookmark-star' + (user.bookmark ? '-fill' : '')}
+                  ></button>
+                </td>
+                <td>
+                  <button onClick={() => handleDelete(user._id)} className='btn2 btn btn-danger'>
+                    delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
-      );
-    }
-  };
-
-  return (
-    <>
-      <h2>
-        <span className={formatHeaderColor()}>{formatHeaderText()}</span>
-      </h2>
-      <div>{renderTab()}</div>
+      )}
     </>
   );
 };
