@@ -1,15 +1,12 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 
-const Bookmark = ({ status, _id, onHandleToggleBookMark }) => {
+const BookMark = ({ status, ...rest }) => {
   return (
-    <td>
-      <button
-        onClick={() => onHandleToggleBookMark(_id)}
-        className={'bi bi-bookmark-star' + (status ? '-fill' : '')}
-      ></button>
-    </td>
+    <button {...rest}>
+      <i className={'bi bi-bookmark' + (status ? '-heart-fill' : '')}></i>
+    </button>
   );
 };
 
-export default Bookmark;
+export default BookMark;

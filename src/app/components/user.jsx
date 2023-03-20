@@ -2,26 +2,33 @@
 import React from 'react';
 import Qualitie from './qualitie';
 import BookMark from './bookmark';
-
-const User = ({ user, onHandleDelete, onHandleToggleBookMark }) => {
+const User = ({
+  _id,
+  name,
+  qualities,
+  profession,
+  completedMeetings,
+  rate,
+  onDelete,
+  bookmark,
+  onToggleBookMark,
+}) => {
   return (
-    <tr key={user._id}>
-      <td>{user.name}</td>
+    <tr>
+      <td>{name}</td>
       <td>
-        {user.qualities.map((item) => (
-          <Qualitie key={item._id} color={item.color} name={item.name} _id={item._id} />
+        {qualities.map((qual) => (
+          <Qualitie key={qual._id} {...qual} />
         ))}
       </td>
-      <td>{user.profession.name}</td>
-      <td>{user.completedMeetings}</td>
-      <td>{user.rate}</td>
-      <BookMark
-        status={user.bookmark}
-        onHandleToggleBookMark={onHandleToggleBookMark}
-        _id={user._id}
-      />
+      <td>{profession.name}</td>
+      <td>{completedMeetings}</td>
+      <td>{rate} /5</td>
       <td>
-        <button onClick={() => onHandleDelete(user._id)} className='btn2 btn btn-danger'>
+        <BookMark status={bookmark} onClick={() => onToggleBookMark(_id)} />
+      </td>
+      <td>
+        <button onClick={() => onDelete(_id)} className='btn btn-danger'>
           delete
         </button>
       </td>
