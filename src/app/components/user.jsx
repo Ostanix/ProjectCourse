@@ -1,7 +1,8 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import Qualitie from './qualitie';
 import BookMark from './bookmark';
+import PropTypes from 'prop-types';
+
 const User = ({
   _id,
   name,
@@ -18,12 +19,12 @@ const User = ({
       <td>{name}</td>
       <td>
         {qualities.map((qual) => (
-          <Qualitie key={qual._id} {...qual} />
+          <Qualitie {...qual} key={qual._id} />
         ))}
       </td>
       <td>{profession.name}</td>
       <td>{completedMeetings}</td>
-      <td>{rate} /5</td>
+      <td>{rate}/5</td>
       <td>
         <BookMark status={bookmark} onClick={() => onToggleBookMark(_id)} />
       </td>
@@ -34,6 +35,18 @@ const User = ({
       </td>
     </tr>
   );
+};
+
+User.propTypes = {
+  _id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  qualities: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string)),
+  profession: PropTypes.objectOf(PropTypes.string),
+  completedMeetings: PropTypes.number.isRequired,
+  rate: PropTypes.number.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  bookmark: PropTypes.bool.isRequired,
+  onToggleBookMark: PropTypes.func.isRequired,
 };
 
 export default User;

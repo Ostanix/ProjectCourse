@@ -22,7 +22,7 @@ function App() {
   return (
     <div>
       <SearchStatus length={users.length} />
-      <Users onDelete={handleDelete} onToggleBookMark={handleToggleBookMark} users={users} />
+      <Users users={users} onDelete={handleDelete} onToggleBookMark={handleToggleBookMark} />
     </div>
   );
 }
