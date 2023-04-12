@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 const SearchStatus = ({ length }) => {
   const renderPhrase = (number) => {
     const lastOne = Number(number.toString().slice(-1));
@@ -21,7 +20,6 @@ const SearchStatus = ({ length }) => {
     </h2>
   );
 };
-
 SearchStatus.propTypes = {
   length: PropTypes.number,
 };
