@@ -11,20 +11,13 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [professions, setProfession] = useState();
   const [selectedProf, setSelectedProf] = useState();
-  const [sortBy, setSortBy] = useState({ iter: 'name', order: 'asc' });
-  const [users, setUsers] = useState();
-  const [headerIcon, setHeaderIcon] = useState({ iconName: 'Имя', icon: 'bi bi-caret-down-fill' });
-
-  const handleIconChange = (iconClass) => {
-    setHeaderIcon(iconClass);
-  };
-
+  const [sortBy, setSortBy] = useState({ path: 'name', order: 'asc' });
   const pageSize = 8;
 
+  const [users, setUsers] = useState();
   useEffect(() => {
     api.users.fetchAll().then((data) => setUsers(data));
   }, []);
-
   const handleDelete = (userId) => {
     setUsers(users.filter((user) => user._id !== userId));
   };
@@ -35,7 +28,6 @@ const Users = () => {
       }
       return user;
     });
-
     setUsers(newArray);
   };
 
@@ -54,10 +46,21 @@ const Users = () => {
   const handlePageChange = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
-
   const handleSort = (item) => {
     setSortBy(item);
   };
+
+  useEffect(() => {
+    if (users) {
+      const filteredUsers = selectedProf
+        ? users.filter((user) => JSON.stringify(user.profession) === JSON.stringify(selectedProf))
+        : users;
+      const usersCrop = paginate(filteredUsers, currentPage, pageSize);
+      if (usersCrop.length === 0 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
+    }
+  }, [users]);
 
   if (users) {
     const filteredUsers = selectedProf
@@ -70,10 +73,6 @@ const Users = () => {
     const clearFilter = () => {
       setSelectedProf();
     };
-
-    if (currentPage > Math.ceil(filteredUsers.length / pageSize) && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
 
     return (
       <div className='d-flex'>
@@ -99,8 +98,6 @@ const Users = () => {
               selectedSort={sortBy}
               onDelete={handleDelete}
               onToggleBookMark={handleToggleBookMark}
-              onHeaderIcon={headerIcon}
-              onHandleIconChange={handleIconChange}
             />
           )}
           <div className='d-flex justify-content-center'>

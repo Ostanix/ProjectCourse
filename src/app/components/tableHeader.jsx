@@ -1,30 +1,25 @@
 import React from 'react';
-import Proptypes from 'prop-types';
-
-const TableHeader = ({ onSort, selectedSort, columns, onHeaderIcon, onHandleIconChange }) => {
-  const handleSort = (item, name) => {
+import PropTypes from 'prop-types';
+const TableHeader = ({ onSort, selectedSort, columns }) => {
+  const handleSort = (item) => {
     if (selectedSort.path === item) {
       onSort({
         ...selectedSort,
         order: selectedSort.order === 'asc' ? 'desc' : 'asc',
       });
-      onHandleIconChange({
-        ...onHeaderIcon,
-        icon:
-          onHeaderIcon.icon === 'bi bi-caret-down-fill'
-            ? 'bi bi-caret-up-fill'
-            : 'bi bi-caret-down-fill',
-      });
     } else {
       onSort({ path: item, order: 'asc' });
-      onHandleIconChange({ iconName: name, icon: 'bi bi-caret-up-fill' });
     }
   };
-
-  const handleIconsClass = (columnName) => {
-    if (columnName === onHeaderIcon.iconName) {
-      return onHeaderIcon.icon;
+  const renderSortArrow = (selectedSort, currentPath) => {
+    if (selectedSort.path === currentPath) {
+      if (selectedSort.order === 'asc') {
+        return <i className='bi bi-caret-down-fill'></i>;
+      } else {
+        return <i className='bi bi-caret-up-fill'></i>;
+      }
     }
+    return null;
   };
 
   return (
@@ -33,28 +28,21 @@ const TableHeader = ({ onSort, selectedSort, columns, onHeaderIcon, onHandleIcon
         {Object.keys(columns).map((column) => (
           <th
             key={column}
-            onClick={
-              columns[column].path
-                ? () => handleSort(columns[column].path, columns[column].name)
-                : undefined
-            }
+            onClick={columns[column].path ? () => handleSort(columns[column].path) : undefined}
             {...{ role: columns[column].path && 'button' }}
             scope='col'
           >
-            <i className={handleIconsClass(columns[column].name)}>{columns[column].name}</i>
+            {columns[column].name} {renderSortArrow(selectedSort, columns[column].path)}
           </th>
         ))}
       </tr>
     </thead>
   );
 };
-
 TableHeader.propTypes = {
-  onSort: Proptypes.func.isRequired,
-  selectedSort: Proptypes.object.isRequired,
-  columns: Proptypes.object.isRequired,
-  onHandleIconChange: Proptypes.func.isRequired,
-  onHeaderIcon: Proptypes.object.isRequired,
+  onSort: PropTypes.func.isRequired,
+  selectedSort: PropTypes.object.isRequired,
+  columns: PropTypes.object.isRequired,
 };
 
 export default TableHeader;
