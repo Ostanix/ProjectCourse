@@ -1,19 +1,14 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import SelectedUser from './selectedUser';
+import SelectedUser from '../components/selectedUser';
 import Users from '../components/users';
-import api from '../api';
+import { useParams } from 'react-router-dom';
 
-const AllUsersList = ({ match }) => {
-  const userID = match.params.userID;
+const AllUsersList = () => {
+  const params = useParams();
+  const { userID } = params;
 
-  const getData = async (usersID) => {
-    const data = await api.users.getById(usersID);
-    return data;
-  };
-  const objUser = getData(userID);
-
-  return userID ? <SelectedUser data={objUser} /> : <Users />;
+  return <>{userID ? <SelectedUser userID={userID} /> : <Users />}</>;
 };
 
 export default AllUsersList;
