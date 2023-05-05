@@ -29,7 +29,6 @@ const Users = () => {
 
   const handleProfessionSelect = (item) => {
     setSelectedProf(item);
-    setName('');
   };
 
   useEffect(() => {
@@ -55,6 +54,7 @@ const Users = () => {
   }, []);
 
   useEffect(() => {
+    setName('');
     setCurrentPage(1);
   }, [selectedProf]);
 
@@ -76,7 +76,7 @@ const Users = () => {
 
     const searchedUsers =
       name.length > 0
-        ? filteredUsers.filter((user) => user.name.toLowerCase().includes(name.toLocaleLowerCase()))
+        ? users.filter((user) => user.name.toLowerCase().includes(name.toLocaleLowerCase()))
         : filteredUsers;
 
     const count = searchedUsers.length;
