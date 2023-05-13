@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import api from '../../../api';
 import Qualities from '../../ui/qualities';
 import { useHistory } from 'react-router-dom';
-// import { Link } from 'react-router-dom';
 
 const UserPage = ({ userId }) => {
   const history = useHistory();
@@ -15,6 +14,7 @@ const UserPage = ({ userId }) => {
     history.push(`/users/${user._id}/edit`);
   };
   if (user) {
+    console.log(name);
     return (
       <div>
         <h1> {user.name}</h1>
@@ -22,7 +22,7 @@ const UserPage = ({ userId }) => {
         <Qualities qualities={user.qualities} />
         <p>completedMeetings: {user.completedMeetings}</p>
         <h2>Rate: {user.rate}</h2>
-        <button onClick={handleClick}> Изменить.....</button>
+        <button onClick={handleClick}> Изменить</button>
       </div>
     );
   } else {
