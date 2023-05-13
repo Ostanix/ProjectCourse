@@ -16,6 +16,7 @@ const EditUserPage = ({ userId }) => {
   const [qualities, setQualities] = useState({});
   const [errors, setErrors] = useState({});
   const [data, setData] = useState({
+    name: '',
     email: '',
     password: '',
     profession: '',
@@ -24,35 +25,37 @@ const EditUserPage = ({ userId }) => {
   });
 
   const getProfessionById = (id) => {
-    for (const prof in professions) {
-      const profData = professions[prof];
-      if (profData._id === id) return profData;
+    for (const prof of professions) {
+      if (prof.value === id) {
+        return { _id: prof.value, name: prof.label };
+      }
     }
-  }; // object
-
+  };
   const getQualities = (elements) => {
     const qualitiesArray = [];
     for (const elem of elements) {
       for (const quality in qualities) {
-        if (elem.value === qualities[quality]._id) {
-          qualitiesArray.push(qualities[quality]);
+        if (elem.value === qualities[quality].value) {
+          qualitiesArray.push({
+            _id: qualities[quality].value,
+            name: qualities[quality].label,
+            color: qualities[quality].color,
+          });
         }
       }
     }
     return qualitiesArray;
-  }; // array
+  };
 
   useEffect(() => {
     setIsLoading(true);
-    api.users.getById(userId).then(
-      ({ profession, qualities, ...data }) =>
-        setData((prevState) => ({
-          ...prevState,
-          ...data,
-          qualities: transformData(qualities),
-          profession: profession._id,
-        })),
-      console.log(qualities),
+    api.users.getById(userId).then(({ profession, qualities, ...data }) =>
+      setData((prevState) => ({
+        ...prevState,
+        ...data,
+        qualities: transformData(qualities),
+        profession: profession._id,
+      })),
     );
 
     const transformData = (data) => {
